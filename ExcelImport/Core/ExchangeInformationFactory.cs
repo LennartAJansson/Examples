@@ -15,14 +15,14 @@ public class ExchangeInformationFactory : IExchangeInformationFactory
     }
 
     //TODO! Rethink a bit further
-    public IExchangeInformationFactory AddBuilder<TIn>(Func<Type> factory) where TIn : IExchangeInformationHandler
+    public IExchangeInformationFactory AddHandler<TIn>(Func<Type> factory) where TIn : IExchangeInformationHandler
     {
         Instances.Add(typeof(TIn));
 
         return this;
     }
 
-    public TIn GetBuilder<TIn>() where TIn : IExchangeInformationHandler
+    public TIn GetHandler<TIn>() where TIn : IExchangeInformationHandler
     {
         if (Instances.Contains(typeof(TIn)))
         {

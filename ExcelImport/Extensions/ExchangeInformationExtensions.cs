@@ -7,15 +7,14 @@
 
     public static class ExchangeInformationExtensions
     {
-        public static IServiceCollection AddExchangeInformation(this IServiceCollection services, Action<IExchangeInformationFactory> configure)
+        public static IServiceCollection AddExchangeInformation(this IServiceCollection services, Action<IServiceCollection> svc, Action<IExchangeInformationFactory> configure)
         {
-            services.AddSingleton<IExchangeInformationFactory, ExchangeInformationFactory>((s) =>
-            {
-                IServiceProvider svc = s.GetRequiredService<IServiceProvider>();
-                IExchangeInformationFactory factory = new ExchangeInformationFactory(svc);
-                configure.Invoke(factory);
-                return factory as ExchangeInformationFactory ?? throw new ArgumentNullException();
-            });
+            svc.Invoke(services);
+            ServiceProvider provider = services.BuildServiceProvider();
+            IExchangeInformationFactory factory = new ExchangeInformationFactory(provider);
+
+            services.AddSingleton<IExchangeInformationFactory>(factory);
+            configure.Invoke(factory);
 
             return services;
         }
